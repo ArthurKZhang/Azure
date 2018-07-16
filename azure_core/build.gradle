@@ -1,7 +1,4 @@
 apply plugin: 'com.android.library'
-import org.aspectj.bridge.IMessage
-import org.aspectj.bridge.MessageHandler
-import org.aspectj.tools.ajc.Main
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
@@ -21,11 +18,16 @@ android {
 }
 
 dependencies {
+    compile 'org.aspectj:aspectjrt:1.8.6'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'org.aspectj:aspectjrt:1.9.1'
 }
+
+import org.aspectj.bridge.IMessage
+import org.aspectj.bridge.MessageHandler
+import org.aspectj.tools.ajc.Main
+
 android.libraryVariants.all { variant ->
     JavaCompile javaCompile = variant.javaCompile
     javaCompile.doLast {

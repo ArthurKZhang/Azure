@@ -1,34 +1,8 @@
-apply plugin: 'com.android.application'
 import org.aspectj.bridge.IMessage
 import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
 
-android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
-
-    defaultConfig {
-        applicationId "com.arthur.azure"
-        minSdkVersion 21
-        targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'org.aspectj:aspectjrt:1.9.1'
-    compile project(":azure_core")
-}
+apply plugin: 'com.android.application'
 
 final def log = project.logger
 final def variants = project.android.applicationVariants
@@ -72,3 +46,33 @@ variants.all { variant ->
         }
     }
 }
+
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
+
+    defaultConfig {
+        applicationId "com.arthur.azure"
+        minSdkVersion 21
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile 'org.aspectj:aspectjrt:1.8.6'
+    //自己定义的切面代码的模块
+    compile project(":azure_core")
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+}
+
