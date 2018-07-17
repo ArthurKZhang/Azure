@@ -2,18 +2,17 @@ package com.arthur.azure;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-
-//import azure_core.annotations.Logging;
 
 import com.arthur.azure_core.annotations.Logging;
+import com.arthur.azure_core.annotations.PageLoadTime;
 
-@Logging(tag = "CLASS")
+//@Logging(tag = "CLASS")
+@PageLoadTime
 public class MainActivity extends AppCompatActivity {
 
-    @Logging
+//    @Logging
     private String abc;
-    @Logging
+//    @Logging
     private int[] ints;
 
     //    @Logging
@@ -31,12 +30,17 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(ints);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+    }
+
     //    @Logging
     public void a() {
         b(abc);
     }
 
-    @Logging(tag = "BBB")
+//    @Logging(tag = "BBB")
     private int b(String s) {
         return 0;
     }
