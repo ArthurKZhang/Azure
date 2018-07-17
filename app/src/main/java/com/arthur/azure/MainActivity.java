@@ -8,24 +8,36 @@ import android.util.Log;
 
 import com.arthur.azure_core.annotations.Logging;
 
-//@Logging(tag = "asdfg", type = 3)
+@Logging(tag = "CLASS")
 public class MainActivity extends AppCompatActivity {
 
-    //    @Logging
-    private String abc;
-
     @Logging
+    private String abc;
+    @Logging
+    private int[] ints;
+
+    //    @Logging
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         abc = "asdfg";
-//        Log.v("Log","asdfg");
+
+        ints = new int[]{1, 2, 3};
+
         a();
+        A a = new A();
+        a.toString();
+        System.out.println(ints);
     }
 
-    @Logging
+    //    @Logging
     public void a() {
+        b(abc);
     }
 
+    @Logging(tag = "BBB")
+    private int b(String s) {
+        return 0;
+    }
 }
