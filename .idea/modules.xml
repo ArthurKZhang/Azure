@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Azure.iml" filepath="$PROJECT_DIR$/Azure.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Azure.iml" filepath="$PROJECT_DIR$/.idea/Azure.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/azure_core/azure_core.iml" filepath="$PROJECT_DIR$/azure_core/azure_core.iml" />
     </modules>
