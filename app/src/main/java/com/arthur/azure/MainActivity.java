@@ -2,18 +2,25 @@ package com.arthur.azure;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
+//import azure_core.annotations.Logging;
 
 import com.arthur.azure_core.annotations.Logging;
-import com.arthur.azure_core.annotations.PageLoadTime;
+import com.arthur.azure_core.annotations.PbClick;
 
 //@Logging(tag = "CLASS")
-@PageLoadTime
 public class MainActivity extends AppCompatActivity {
 
-//    @Logging
+    @Logging
     private String abc;
-//    @Logging
+    @Logging
     private int[] ints;
+
+    Button bt_testOnclick;
+
 
     //    @Logging
     @Override
@@ -28,11 +35,15 @@ public class MainActivity extends AppCompatActivity {
         A a = new A();
         a.toString();
         System.out.println(ints);
-    }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
+        bt_testOnclick = (Button) this.findViewById(R.id.bt_testOnclick);
+        bt_testOnclick.setOnClickListener(new View.OnClickListener() {
+            @PbClick(rseat = "BT_TEST_ONCLICK")
+            @Override
+            public void onClick(View view) {
+                Log.i("___****___","HHHHHHHHHHHHHAAAAAA");
+            }
+        });
     }
 
     //    @Logging
@@ -40,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         b(abc);
     }
 
-//    @Logging(tag = "BBB")
+    @Logging(tag = "BBB")
     private int b(String s) {
         return 0;
     }
