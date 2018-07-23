@@ -1,5 +1,10 @@
 package com.arthur.azure;
 
+import android.app.Activity;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,11 +13,17 @@ import android.widget.Button;
 
 //import azure_core.annotations.Logging;
 
+import com.arthur.azure_core.AzureShip;
 import com.arthur.azure_core.annotations.Logging;
 import com.arthur.azure_core.annotations.PbClick;
+import com.arthur.azure_core.annotations.PbElement;
+import com.arthur.azure_core.annotations.PermissionAcquire;
+import com.arthur.azure_core.annotations.PingBack;
+
+import java.security.Permission;
 
 //@Logging(tag = "CLASS")
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     @Logging
     private String abc;
@@ -21,8 +32,9 @@ public class MainActivity extends AppCompatActivity {
 
     Button bt_testOnclick;
 
-
+//ActivityCompat./**//**/
     //    @Logging
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +53,10 @@ public class MainActivity extends AppCompatActivity {
             @PbClick(rseat = "BT_TEST_ONCLICK")
             @Override
             public void onClick(View view) {
-                Log.i("___****___","HHHHHHHHHHHHHAAAAAA");
+                Log.i("___****___", "HHHHHHHHHHHHHAAAAAA");
             }
         });
+//        Fragment
     }
 
     //    @Logging
@@ -51,8 +64,23 @@ public class MainActivity extends AppCompatActivity {
         b(abc);
     }
 
-    @Logging(tag = "BBB")
+    //    @Logging(tag = "BBB")
+    @PingBack(pairs = {
+            @PbElement(keyName = "Class", contentValue = "MainActivity"),
+            @PbElement(keyName = "Method", contentValue = "b()")
+    })
     private int b(String s) {
         return 0;
+    }
+
+
+//    @PermissionAcquire(targetSDKVersion = targetSDKVersion,)
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        AzureShip.onRequestPermissionsResult(MainActivity.this,requestCode,permissions,grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
     }
 }

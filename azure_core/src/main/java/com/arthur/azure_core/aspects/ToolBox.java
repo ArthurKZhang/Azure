@@ -18,6 +18,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * Created by zhangyu on 13/07/2018.
@@ -50,6 +51,9 @@ public class ToolBox {
         }
     }
 
+    public static int targetSDKVersion;
+    public static int buildSDKVersion;
+
     /**
      * writing each step in a line, makes it easier to debug
      *
@@ -75,7 +79,7 @@ public class ToolBox {
 
         CodeSignature signature = (CodeSignature) joinPoint.getSignature();
         Class<?> cls = signature.getDeclaringType();
-        Logging annotation = null;
+        Logging annotation;
         if (signature instanceof MethodSignature) {
             annotation = ((MethodSignature) signature).getMethod().getAnnotation(Logging.class);
         } else if (signature instanceof ConstructorSignature) {
@@ -129,17 +133,15 @@ public class ToolBox {
         Signature signature = joinPoint.getSignature();
 
         Class<?> cls = signature.getDeclaringType();
-        Logging annotation = null;
+        Logging annotation;
 
-        if (annotation == null) {
-            if (signature instanceof MethodSignature) {
-                annotation = ((MethodSignature) signature).getMethod().getAnnotation(Logging.class);
-            } else if (signature instanceof ConstructorSignature) {
-                annotation = (Logging) ((ConstructorSignature) signature).getConstructor().getAnnotation(Logging.class);
-            } else {
-                Log.e("azure", "cannot get annotation");
-                return;
-            }
+        if (signature instanceof MethodSignature) {
+            annotation = ((MethodSignature) signature).getMethod().getAnnotation(Logging.class);
+        } else if (signature instanceof ConstructorSignature) {
+            annotation = (Logging) ((ConstructorSignature) signature).getConstructor().getAnnotation(Logging.class);
+        } else {
+            Log.e("azure", "cannot get annotation");
+            return;
         }
 
         String tag = annotation.tag();
@@ -265,4 +267,9 @@ public class ToolBox {
 
     }
 
+    public static boolean pingBack(Map<String, String> map) {
+        Log.i("PingBackTest", "MSG contains: " + map.toString());
+
+        return true;
+    }
 }

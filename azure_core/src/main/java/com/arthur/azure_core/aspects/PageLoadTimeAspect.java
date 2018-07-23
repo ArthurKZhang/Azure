@@ -48,7 +48,8 @@ public class PageLoadTimeAspect {
     @After("activityOnWindFocusChanged()")
     public void endActi(ProceedingJoinPoint joinPoint) {
         actiEnd = System.nanoTime();
-        Log.v("launch Activity Cost", actiEnd - actiStart + "");
+        String className = joinPoint.getSignature().getDeclaringType().getName();
+        Log.v("launch Activity Cost", actiEnd - actiStart + " in " + className);
     }
 
 
@@ -76,7 +77,8 @@ public class PageLoadTimeAspect {
     @After("fragmentOnWindFocusChanged()")
     public void endFrag(ProceedingJoinPoint joinPoint) {
         actiEnd = System.nanoTime();
-        Log.v("launch Fragment Cost", actiEnd - actiStart + "");
+        String className = joinPoint.getSignature().getDeclaringType().getName();
+        Log.v("launch Fragment Cost", actiEnd - actiStart + " in " + className);
     }
 
 }
