@@ -1,5 +1,6 @@
 package com.arthur.azure_core.aspects;
 
+import android.app.Application;
 import android.os.Build;
 import android.os.Looper;
 import android.os.Trace;
@@ -53,6 +54,8 @@ public class ToolBox {
 
     public static int targetSDKVersion;
     public static int buildSDKVersion;
+
+    public static Application application;
 
     /**
      * writing each step in a line, makes it easier to debug

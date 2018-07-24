@@ -15,5 +15,7 @@ public class APP extends Application {
         ToolBox.buildSDKVersion = Build.VERSION.SDK_INT;
         ToolBox.targetSDKVersion = this.getApplicationInfo().targetSdkVersion;
 
+        ToolBox.application = APP.this;
+
     }
 }

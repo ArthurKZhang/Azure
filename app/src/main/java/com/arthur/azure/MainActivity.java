@@ -1,15 +1,12 @@
 package com.arthur.azure;
 
 import android.app.Activity;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 //import azure_core.annotations.Logging;
 
@@ -17,10 +14,9 @@ import com.arthur.azure_core.AzureShip;
 import com.arthur.azure_core.annotations.Logging;
 import com.arthur.azure_core.annotations.PbClick;
 import com.arthur.azure_core.annotations.PbElement;
-import com.arthur.azure_core.annotations.PermissionAcquire;
+import com.arthur.azure_core.annotations.PermissionFail;
+import com.arthur.azure_core.annotations.PermissionSuccess;
 import com.arthur.azure_core.annotations.PingBack;
-
-import java.security.Permission;
 
 //@Logging(tag = "CLASS")
 public class MainActivity extends Activity {
@@ -74,13 +70,38 @@ public class MainActivity extends Activity {
     }
 
 
-//    @PermissionAcquire(targetSDKVersion = targetSDKVersion,)
+//    @PermissionRequest(targetSDKVersion = targetSDKVersion,)
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        AzureShip.onRequestPermissionsResult(MainActivity.this,requestCode,permissions,grantResults);
+        AzureShip.onRequestPermissionsResult(MainActivity.this, requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+    }
+
+    public static final int REQUECT_CODE_SDCARD = 1;
+    public static final int REQUECT_CODE_CALL_PHONE = 2;
+
+
+    @PermissionSuccess(requestCode = REQUECT_CODE_SDCARD)
+    public void requestSdcardSuccess() {
+        Toast.makeText(this, "GRANT ACCESS SDCARD!", Toast.LENGTH_SHORT).show();
+    }
+
+    @PermissionFail(requestCode = REQUECT_CODE_SDCARD)
+    public void requestSdcardFailed() {
+        Toast.makeText(this, "DENY ACCESS SDCARD!", Toast.LENGTH_SHORT).show();
+    }
+
+
+    @PermissionSuccess(requestCode = REQUECT_CODE_CALL_PHONE)
+    public void requestCallPhoneSuccess() {
+        Toast.makeText(this, "GRANT ACCESS SDCARD!", Toast.LENGTH_SHORT).show();
+    }
+
+    @PermissionFail(requestCode = REQUECT_CODE_CALL_PHONE)
+    public void requestCallPhoneFailed() {
+        Toast.makeText(this, "DENY ACCESS SDCARD!", Toast.LENGTH_SHORT).show();
     }
 }

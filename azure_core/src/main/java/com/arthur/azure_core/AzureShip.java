@@ -60,9 +60,9 @@ public class AzureShip {
     }
 
     private static void executeMethod(Object activity, Method executeMethod) {
-        if(executeMethod != null){
+        if (executeMethod != null) {
             try {
-                if(!executeMethod.isAccessible()) executeMethod.setAccessible(true);
+                if (!executeMethod.isAccessible()) executeMethod.setAccessible(true);
                 executeMethod.invoke(activity, null);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -73,12 +73,9 @@ public class AzureShip {
     }
 
     public static Method findMethodWithRequestCode(Class clazz, Class<? extends Annotation> annotation, int requestCode) {
-        for (Method method : clazz.getDeclaredMethods())
-        {
-            if (method.isAnnotationPresent(annotation))
-            {
-                if (isEqualRequestCodeFromAnntation(method, annotation, requestCode))
-                {
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(annotation)) {
+                if (isEqualRequestCodeFromAnntation(method, annotation, requestCode)) {
                     return method;
                 }
             }
@@ -87,9 +84,9 @@ public class AzureShip {
     }
 
     private static boolean isEqualRequestCodeFromAnntation(Method method, Class<? extends Annotation> annotation, int requestCode) {
-        if(annotation.equals(PermissionFail.class)){
+        if (annotation.equals(PermissionFail.class)) {
             return requestCode == method.getAnnotation(PermissionFail.class).requestCode();
-        } else if(annotation.equals(PermissionSuccess.class)){
+        } else if (annotation.equals(PermissionSuccess.class)) {
             return requestCode == method.getAnnotation(PermissionSuccess.class).requestCode();
         } else {
             return false;
