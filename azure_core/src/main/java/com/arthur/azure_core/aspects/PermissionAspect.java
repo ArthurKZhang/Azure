@@ -16,6 +16,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +37,11 @@ public class PermissionAspect {
     public void aroundMethod(final ProceedingJoinPoint joinPoint, final PermissionRequest permAnnot) throws Throwable {
 
         Object target = joinPoint.getTarget();
-        Object aThis = joinPoint.getThis();
-//        joinPoint.
+
+        Field field = target.getClass().getDeclaredField("this$0");
+        field.setAccessible(true);
+        Object o = field.get(target);
+
         Log.v(TAG,"joinPoint target is a "+target.getClass().getName());
         Activity activity = null;
         if (target instanceof Activity) {
