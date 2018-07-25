@@ -7,26 +7,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <code>int requestCode, String[] permissions</code>
+ * <p>
  * if you pin this annotation on your 'business function', be aware that this function will not be called if
  * your required permissions are needed to be requested. That means only if you already have those permissions, your
  * annotated 'business function' will be executed.
  * For callbacks methods, see @PermissionSuccess and @PermissionFail.
  * I recommend you to use these annotations as the given example below:
  * <p>
- * \@PermissionRequest(bla.bla)<p>
+ * <code>
+ *
+ * @PermissionRequest(bla.bla) function_business()
+ * @PermissionSuccess function_onSuccess(){
+ * //something you want to do;
  * function_business()
- * <p>
- * \@PermissionSuccess<p>
- * function_onSuccess(){<p>
- * //something you want to do;<p>
- * function_business()<p>
- * //something you want to do;<p>
+ * //something you want to do;
+ * }
+ * @PermissionFail function_onFail(){
+ * //something you want to do;
  * }
  * <p>
- * \@PermissionFail<p>
- * function_onFail(){<p>
- * //something you want to do;<p>
- * }
+ * </code>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

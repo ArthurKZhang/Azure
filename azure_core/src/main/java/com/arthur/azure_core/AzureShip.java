@@ -5,6 +5,7 @@ package com.arthur.azure_core;
  */
 
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import com.arthur.azure_core.annotations.PermissionFail;
 import com.arthur.azure_core.annotations.PermissionSuccess;
@@ -20,6 +21,8 @@ import java.util.List;
  * Azure configurations Interfaces
  */
 public class AzureShip {
+
+    public static final String TAG = "AzureShip";
 
     public static void setEnableLogging(Boolean isEnable) {
         LogAspect.setEnabled(isEnable);
@@ -40,7 +43,7 @@ public class AzureShip {
                 deniedPermissions.add(permissions[i]);
             }
         }
-
+        Log.v(TAG, "Object: " + obj.getClass().getName() + "; DeniedPermissions:" + deniedPermissions.toString());
         if (deniedPermissions.size() > 0) {
             doExecuteFail(obj, requestCode);
         } else {
@@ -48,14 +51,13 @@ public class AzureShip {
         }
     }
 
-    private static void doExecuteFail(Object obj, int requestCode) {
-
+    private static void doExecuteFail(Object activity, int requestCode) {
+        Method executeMethod = findMethodWithRequestCode(activity.getClass(), PermissionFail.class, requestCode);
+        executeMethod(activity, executeMethod);
     }
 
     private static void doExecuteSuccess(Object activity, int requestCode) {
         Method executeMethod = findMethodWithRequestCode(activity.getClass(), PermissionSuccess.class, requestCode);
-
-
         executeMethod(activity, executeMethod);
     }
 
@@ -76,9 +78,11 @@ public class AzureShip {
         for (Method method : clazz.getDeclaredMethods()) {
             if (method.isAnnotationPresent(annotation)) {
                 if (isEqualRequestCodeFromAnntation(method, annotation, requestCode)) {
+                    Log.v(TAG, "find method: " + method.getName() + " matched");
                     return method;
                 }
             }
+            Log.v(TAG, "find method name: " + method.getName());
         }
         return null;
     }
