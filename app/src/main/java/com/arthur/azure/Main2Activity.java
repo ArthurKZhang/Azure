@@ -9,7 +9,7 @@ import android.widget.Button;
 
 import com.arthur.azure_core.permission.NeedPermission;
 
-@NeedPermission(permissions = {android.Manifest.permission.READ_PHONE_STATE}, runIgnorePermission = true)
+//@NeedPermission(permissions = {android.Manifest.permission.READ_PHONE_STATE}, runIgnorePermission = true)
 public class Main2Activity extends AppCompatActivity {
     private static final String Tag = "@@@@";
 
@@ -38,7 +38,8 @@ public class Main2Activity extends AppCompatActivity {
             deniedMessage = "禁止msg",
             deniedButton = "禁止but",
             settingText = "设置App",
-            needGotoSetting = true)
+            needGotoSetting = true,
+            runIgnorePermission = true)
     private void pppppp() {
         Log.v(Tag, "inside method pppp()");
     }

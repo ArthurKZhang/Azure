@@ -5,24 +5,23 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import junit.framework.Assert;
-
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import static com.arthur.azure_core.permission.PermissionCheckSDK.PERMISSION_TAG;
 
 /**
  * check permission
  * <br>
- * modify from https://github.com/ParkSangGwon/TedPermission
- *
  */
 public class CheckPermission {
     private static final String Tag = "CheckPermission";
 
     private static CheckPermission sInstance;
-    private final Context mContext;
+    private final Context mContext; //A Application Context
     private PermissionRequestWrapper mCurPermissionRequestWrapper;
     private Queue<PermissionRequestWrapper> mPermissionRequestWrappers = new ConcurrentLinkedQueue<>();
+    // a callback function AFTER requesting permission.
     private ShadowPermissionActivity.OnPermissionRequestFinishedListener mOnPermissionRequestFinishedListener = new ShadowPermissionActivity.OnPermissionRequestFinishedListener() {
         @Override
         public boolean onPermissionRequestFinishedAndCheckNext(String[] permissions) {
@@ -35,7 +34,7 @@ public class CheckPermission {
         }
     };
 
-    public static CheckPermission instance(Context context) {
+    public static CheckPermission getsInstance(Context context) {
         if (sInstance == null) {
             synchronized (CheckPermission.class) {
                 if (sInstance == null) {
@@ -59,7 +58,8 @@ public class CheckPermission {
         }
 
         if (!PermissionUtils.isOverMarshmallow()) {
-//            Log(Tag, "")
+            Log.v(PERMISSION_TAG, "Build.VERSION.SDK_INT < Build.VERSION_CODES.M (android 6.0)");
+            //6.0以下manifest声明了 安卓便授予权限
             onPermissionGranted(permissionItem, permissionListener);
         } else {
             mPermissionRequestWrappers.add(new PermissionRequestWrapper(permissionItem, permissionListener));
@@ -70,7 +70,7 @@ public class CheckPermission {
         }
     }
 
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+//    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     private void requestPermissions(PermissionRequestWrapper permissionRequestWrapper) {
         final PermissionItem item = permissionRequestWrapper.permissionItem;
@@ -92,7 +92,6 @@ public class CheckPermission {
     }
 
     private void onPermissionGranted(PermissionItem item, PermissionListener listener) {
-        Assert.assertNotNull(item);
 
         if (listener != null) {
             listener.permissionGranted();
@@ -102,7 +101,6 @@ public class CheckPermission {
     }
 
     private void onPermissionDenied(PermissionItem item, PermissionListener listener) {
-        Assert.assertNotNull(item);
 
         if (listener != null) {
             listener.permissionDenied();

@@ -12,9 +12,11 @@ public class PermissionCheckSDK {
 
     public static Application application;
 
-    public static void addCheckPermissionItem(CheckPermissionItem item) {
-        PermissionAspect.addCheckPermissionItem(item);
-    }
+//    public static void addCheckPermissionItem(CheckPermissionItem item) {
+//        PermissionAspect.addCheckPermissionItem(item);
+//    }
+
+    public static final String PERMISSION_TAG = "Azure.Permission";
 
     public static void init(Application app) {
         if (app == null) {

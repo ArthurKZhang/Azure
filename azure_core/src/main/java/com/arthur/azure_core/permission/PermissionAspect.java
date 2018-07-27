@@ -2,29 +2,18 @@ package com.arthur.azure_core.permission;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.arthur.azure_core.annotations.PermissionRequest;
-import com.arthur.azure_core.aspects.ToolBox;
-
-import junit.framework.Assert;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
-import java.lang.annotation.Target;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,50 +55,41 @@ public class PermissionAspect {
             return;
         }
 
-        if (needPermission.runIgnorePermission()) {
-            joinPoint.proceed();
-        }
-
         String[] permissions = needPermission.permissions();
         if (permissions != null && permissions.length > 0) {
             Context context = PermissionCheckSDK.application;
             Log.v(Tag, context.getApplicationInfo().className);
             PermissionItem permissionItem = new PermissionItem(permissions);
 
-            String rationalMsg = getInfoContent(context, needPermission.rationalMessage(), needPermission.rationalMsgResId());
-            String rationalBtn = getInfoContent(context, needPermission.rationalButton(), needPermission.rationalBtnResId());
-            String deniedMsg = getInfoContent(context, needPermission.deniedMessage(), needPermission.deniedMsgResId());
-            String deniedBtn = getInfoContent(context, needPermission.deniedButton(), needPermission.deniedBtnResId());
-            String settingBtn = getInfoContent(context, needPermission.settingText(), needPermission.settingResId());
+            //@1 wrap NeedPermission annotation into PermissionItem Object.
+            setAnnotatoinInfoToPermItem(permissionItem,
+                    getInfoContent(context, needPermission.rationalMessage(), needPermission.rationalMsgResId()),
+                    getInfoContent(context, needPermission.rationalButton(), needPermission.rationalBtnResId()),
+                    getInfoContent(context, needPermission.deniedMessage(), needPermission.deniedMsgResId()),
+                    getInfoContent(context, needPermission.deniedButton(), needPermission.deniedBtnResId()),
+                    getInfoContent(context, needPermission.settingText(), needPermission.settingResId()),
+                    needPermission.needGotoSetting(),
+                    needPermission.runIgnorePermission());
 
-            if (!TextUtils.isEmpty(rationalMsg) && !TextUtils.isEmpty(rationalBtn)) {
-                permissionItem.rationalMessage(rationalMsg).rationalButton(rationalBtn);
-            }
-
-            if (!TextUtils.isEmpty(deniedMsg) && !TextUtils.isEmpty(deniedBtn)) {
-                permissionItem.deniedMessage(deniedMsg).deniedButton(deniedBtn);
-            }
-
-            if (!TextUtils.isEmpty(settingBtn)) {
-                permissionItem.settingText(settingBtn);
-            }
-
-            permissionItem.needGotoSetting(needPermission.needGotoSetting());
-
-            CheckPermission.instance(context).check(permissionItem, new PermissionListener() {
+            CheckPermission.getsInstance(context).check(permissionItem, new PermissionListener() {
                 @Override
                 public void permissionGranted() {
-                    if (!needPermission.runIgnorePermission()) {
+                    try {
+                        joinPoint.proceed();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void permissionDenied() {
+                    if (needPermission.runIgnorePermission()) {
                         try {
                             joinPoint.proceed();
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
                         }
                     }
-                }
-
-                @Override
-                public void permissionDenied() {
                 }
             });
         }
@@ -186,27 +166,18 @@ public class PermissionAspect {
     private static void processCheckPermissionOnActivity(final Activity target, String[] permissions, String rationalMessage, String rationalButton
             , String deniedMessage, String deniedButton, String settingText, boolean needGotoSetting, final boolean runIgnorePermission) {
 
-        Assert.assertTrue(permissions != null && permissions.length > 0);
-
         PermissionItem permissionItem = new PermissionItem(permissions);
 
-        if (!TextUtils.isEmpty(rationalMessage)
-                && !TextUtils.isEmpty(rationalButton)) {
-            permissionItem.rationalMessage(rationalMessage).rationalButton(rationalButton);
-        }
+        setAnnotatoinInfoToPermItem(permissionItem,
+                rationalMessage,
+                rationalButton,
+                deniedMessage,
+                deniedButton,
+                settingText,
+                needGotoSetting,
+                runIgnorePermission);
 
-        if (!TextUtils.isEmpty(deniedMessage)
-                && !TextUtils.isEmpty(deniedButton)) {
-            permissionItem.deniedMessage(deniedMessage).deniedButton(deniedButton);
-        }
-
-        if (!TextUtils.isEmpty(settingText)) {
-            permissionItem.settingText(settingText);
-        }
-
-        permissionItem.needGotoSetting(needGotoSetting);
-
-        CheckPermission.instance(target).check(permissionItem, new PermissionListener() {
+        CheckPermission.getsInstance(target).check(permissionItem, new PermissionListener() {
             @Override
             public void permissionGranted() {
                 sActivitySessions.remove(target.getClass().getName());
@@ -216,16 +187,33 @@ public class PermissionAspect {
             public void permissionDenied() {
                 sActivitySessions.remove(target.getClass().getName());
                 if (!runIgnorePermission) {
-                    target.finish();
+                    target.finish(); //不给权限不能运行，则直接finish
                 }
             }
         });
     }
 
-    public static void addCheckPermissionItem(CheckPermissionItem item) {
-        if (item != null && item.classPath != null) {
-            checkPermissionItems.put(item.classPath, item);
+    private static void setAnnotatoinInfoToPermItem(PermissionItem permissionItem, String rationalMessage, String rationalButton
+            , String deniedMessage, String deniedButton, String settingText, boolean needGotoSetting, final boolean runIgnorePermission) {
+        if (!TextUtils.isEmpty(rationalMessage) && !TextUtils.isEmpty(rationalButton)) {
+            permissionItem.rationalMessage(rationalMessage).rationalButton(rationalButton);
         }
+
+        if (!TextUtils.isEmpty(deniedMessage) && !TextUtils.isEmpty(deniedButton)) {
+            permissionItem.deniedMessage(deniedMessage).deniedButton(deniedButton);
+        }
+
+        if (!TextUtils.isEmpty(settingText)) {
+            permissionItem.settingText(settingText);
+        }
+
+        permissionItem.needGotoSetting(needGotoSetting);
     }
+
+//    public static void addCheckPermissionItem(CheckPermissionItem item) {
+//        if (item != null && item.classPath != null) {
+//            checkPermissionItems.put(item.classPath, item);
+//        }
+//    }
 
 }

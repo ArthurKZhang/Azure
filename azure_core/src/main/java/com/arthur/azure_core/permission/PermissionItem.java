@@ -7,6 +7,9 @@ package com.arthur.azure_core.permission;
 
 import java.io.Serializable;
 
+/**
+ *  A bean to hold information of annotation @{@link NeedPermission}
+ */
 public class PermissionItem implements Serializable {
 
     public String[] permissions;
