@@ -43,15 +43,10 @@ public class MainActivity extends Activity {
         bt_testPermission = (Button) findViewById(R.id.bt_testPermission);
 
         bt_testPermission.setOnClickListener(new View.OnClickListener() {
-
-
-
             @Override
-            @PermissionRequest(requestCode = REQUECT_CODE_SDCARD, permissions = {Manifest.permission.READ_EXTERNAL_STORAGE})
             public void onClick(View v) {
                 Log.v(TAG, "inside onClick(), button PermissionTest clicked");
                 Log.v(TAG, "inside onClick(), before bbbbbb execution");
-                //ghjklk
                 bbbbbb();
                 Log.v(TAG, "inside onClick(), after bbbbbb execution");
             }
@@ -61,9 +56,8 @@ public class MainActivity extends Activity {
 
     public static final String TAG = "MainActiity";
 
-//    @PermissionRequest(requestCode = REQUECT_CODE_SDCARD, permissions = {Manifest.permission.READ_EXTERNAL_STORAGE})
+    @PermissionRequest(requestCode = REQUECT_CODE_SDCARD, permissions = {Manifest.permission.READ_EXTERNAL_STORAGE})
     private void bbbbbb() {
-        //hjkl;'
         businessFunction();
     }
 

@@ -42,14 +42,14 @@ public class PermissionAspect {
         field.setAccessible(true);
         Object o = field.get(target);
 
-        Log.v(TAG,"joinPoint target is a "+target.getClass().getName());
+        Log.v(TAG, "joinPoint target is a " + target.getClass().getName());
         Activity activity = null;
         if (target instanceof Activity) {
             activity = (Activity) target;
         }
 
         if (activity == null) {
-            Log.e(TAG,"Activity is null, aspect aroundMethod() return;");
+            Log.e(TAG, "Activity is null, aspect aroundMethod() return;");
             return; //ERROR sth wrong happened
         }
 
@@ -66,48 +66,47 @@ public class PermissionAspect {
                 if (activity.checkSelfPermission(perm) != PackageManager.PERMISSION_GRANTED)
                     permsNeeded.add(perm);
             }
-            Log.v(TAG,"need permission: "+permsNeeded);
+            Log.v(TAG, "need permission: " + permsNeeded);
             if (permsNeeded.size() == 0) {
-                Log.v(TAG,"permissions are already holden, do the Job.");
+                Log.v(TAG, "permissions are already holden, do the Job.");
                 joinPoint.proceed();
-                Log.v(TAG,"after Joinpoint.proceed(),next statement will be return;");
+                Log.v(TAG, "after Joinpoint.proceed(),next statement will be return;");
                 return;
             } else {
-                //require permission
-                Log.v(TAG,"asynchronous request permission");
-
-                // ATTENTION Asynchronous execution
+                //request permission
+                //TODO 可以用 shouldShowRequestPermissionRationale() 方法来判断是否需要弹出 解释框
+                Log.v(TAG, "asynchronous request permission");
+                //ATTENTION Asynchronous execution
                 activity.requestPermissions(fuckedupCastException(permsNeeded), reqCode);
-                Log.v(TAG,"aspect aroundMethod() return;");
+                Log.v(TAG, "aspect aroundMethod() return;");
                 return;
             }
         }
         // 以上的运行流程是：如果权限已经持有，执行注解方法内的逻辑；如果注解没有持有，去申请权限，会弹出系统弹窗
         // 系统弹窗点击'同意授权'，执行授权成功的回调方法，点击'取消授权'，执行授权失败的回调方法。
 
-        Log.e("permissionTest","should not access this statement!!");
+        Log.e("permissionTest", "should not access this statement!!");
 
 
 //
-//        // 版本高的手机上装的是一个老版的应用，
-//        //动态权限检查-API方法失效: Contex.checkSelfPermission(this,Manifest.permission.CAMERA),
-//        //使用PermissionChecker.checkSelfPermission(context, permission) API. 在进行动态权限申请.
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ToolBox.targetSDKVersion < 23) {
-//            int i = 0;
-//            //1. check permission holding
-//            for (String perm : perms) {
-//                //ATTENTION 使用的API不同！！！！！
-//                if (PermissionChecker.checkSelfPermission(activity, perm) != PackageManager.PERMISSION_GRANTED)
-//                    permsNeeded[i] = perm;
-//                i++;
-//            }
-//            if (permsNeeded.length == 0) {
-//                joinPoint.proceed();
-//                return;
-//            } else {
-////                activity.requestPermissions(permsNeeded, reqCode);
-//                //这里是没有持有授权，然后只会执行授权失败的回调方法，不会有系统弹窗，直接走的是用户拒却的流程。
-//                //这里可以进行弹窗提示用户去设置
+        // 版本高的手机上装的是一个老版的应用，
+        //动态权限检查-API方法失效: Contex.checkSelfPermission(this,Manifest.permission.CAMERA),
+        //使用PermissionChecker.checkSelfPermission(context, permission) API. 在进行动态权限申请.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ToolBox.targetSDKVersion < 23) {
+            //1. check permission holding
+            for (String perm : perms) {
+                if (activity.checkSelfPermission(perm) != PackageManager.PERMISSION_GRANTED)
+                    permsNeeded.add(perm);
+            }
+            if (permsNeeded.size() == 0) {
+                Log.v(TAG, "permissions are already holden, do the Job.");
+                joinPoint.proceed();
+                Log.v(TAG, "after Joinpoint.proceed(),next statement will be return;");
+                return;
+            } else {
+                activity.requestPermissions(fuckedupCastException(permsNeeded), reqCode);
+                //这里是没有持有授权，然后只会执行授权失败的回调方法，不会有系统弹窗，直接走的是用户拒却的流程。
+                //这里可以进行弹窗提示用户去设置
 //                final Activity ac = activity;
 //                new AlertDialog.Builder(ac)
 //                        .setTitle("提示")
@@ -121,22 +120,22 @@ public class PermissionAspect {
 //                        })
 //                        .create()
 //                        .show();
+
+                return;
+            }
+        }
 //
-//                return;
-//            }
-//        }
-//
-//        //权限申请在Manifest文件中，安装成功默认声明的权限都开启。
-//        //但是考虑到不同ROM厂家，照样需要检测是否有权限，若没有仅给出提示。
-//        if (ToolBox.buildSDKVersion < 23 && ToolBox.targetSDKVersion < 23) {
-//            // 不处理
-//        }
+        //权限申请在Manifest文件中，安装成功默认声明的权限都开启。
+        //但是考虑到不同ROM厂家，照样需要检测是否有权限，若没有仅给出提示。
+        if (ToolBox.buildSDKVersion < 23 && ToolBox.targetSDKVersion < 23) {
+            // 不处理
+        }
     }
 
-    private String[] fuckedupCastException(List<String> list){
+    private String[] fuckedupCastException(List<String> list) {
         String[] result = new String[list.size()];
         int i = 0;
-        for (String s : list){
+        for (String s : list) {
             result[i] = s;
             i++;
         }

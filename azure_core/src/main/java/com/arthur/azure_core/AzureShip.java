@@ -4,6 +4,7 @@ package com.arthur.azure_core;
  * Created by zhangyu on 13/07/2018.
  */
 
+import android.app.Application;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
@@ -22,10 +23,19 @@ import java.util.List;
  */
 public class AzureShip {
 
+    private AzureShip() {
+    }
+
     public static final String TAG = "AzureShip";
 
-    public static void setEnableLogging(Boolean isEnable) {
-        LogAspect.setEnabled(isEnable);
+
+    private static Application appContext;
+
+    public static void init(Application app) {
+        if (app == null) {
+            throw new IllegalArgumentException("application must not be null");
+        }
+        appContext = app;
     }
 
     /**
