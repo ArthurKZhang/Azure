@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Azure</string>
+    <string name="test_onclick">Test Onclick</string>
 </resources>

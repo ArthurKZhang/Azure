@@ -1,0 +1,16 @@
+<resources>
+    <string name="permission_cancel">取消</string>
+    <string name="permission_close">确定</string>
+    <string name="permission_denied_msg_default">可以到app设置界面开启权限</string>
+    <string name="permission_ok">确定</string>
+    <string name="permission_setting">设置</string>
+    <style name="Theme.Transparent" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <!--parent="Theme.AppCompat.Light.DarkActionBar"-->
+    </style>
+</resources>
